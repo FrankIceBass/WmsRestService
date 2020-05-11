@@ -1,0 +1,31 @@
+// WmsRestService (info@francescodirienzo.it)
+// Copyright Francesco Di Rienzo 2020
+// MIT License
+
+#pragma once
+
+#include <WmsRestService/Configuration.hpp>
+#include <WmsRestService/Version.hpp>
+
+#ifndef WMSRESTSERVICE_NAMESPACE
+
+#define WMSRESTSERVICE_DO_CONCAT(A, B) A##B
+#define WMSRESTSERVICE_CONCAT2(A, B) WMSRESTSERVICE_DO_CONCAT(A, B)
+#define WMSRESTSERVICE_CONCAT4(A, B, C, D) \
+  WMSRESTSERVICE_CONCAT2(WMSRESTSERVICE_CONCAT2(A, B), WMSRESTSERVICE_CONCAT2(C, D))
+#define WMSRESTSERVICE_CONCAT8(A, B, C, D, E, F, G, H)    \
+  WMSRESTSERVICE_CONCAT2(WMSRESTSERVICE_CONCAT4(A, B, C, D), \
+                      WMSRESTSERVICE_CONCAT4(E, F, G, H))
+#define WMSRESTSERVICE_CONCAT12(A, B, C, D, E, F, G, H, I, J, K, L) \
+  WMSRESTSERVICE_CONCAT8(A, B, C, D, E, F, G,                       \
+                      WMSRESTSERVICE_CONCAT4(H, I, J, WMSRESTSERVICE_CONCAT2(K, L)))
+
+#define WMSRESTSERVICE_NAMESPACE                                            \
+  WMSRESTSERVICE_CONCAT12(                                                  \
+      WmsRestService, WMSRESTSERVICE_VERSION_MAJOR, WMSRESTSERVICE_VERSION_MINOR, \
+      WMSRESTSERVICE_VERSION_REVISION, _, WMSRESTSERVICE_USE_LONG_LONG,        \
+      WMSRESTSERVICE_USE_DOUBLE, WMSRESTSERVICE_DECODE_UNICODE,                \
+      WMSRESTSERVICE_ENABLE_NAN, WMSRESTSERVICE_ENABLE_INFINITY,               \
+      WMSRESTSERVICE_ENABLE_PROGMEM, WMSRESTSERVICE_ENABLE_COMMENTS)
+
+#endif

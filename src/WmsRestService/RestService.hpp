@@ -15,23 +15,23 @@
 #endif
 
 #ifdef DEBUG_MODE
-	#define DEBUG_SERIAL_INIT(x)		Serial.begin(x);
-	#define DEBUG_PRINT(x)				Serial.print(x);
-	#define DEBUG_PRINTLN(x)			Serial.println(x);
-	#define DEBUG_IF_PRINT(x, y)		if(x) Serial.print(y);	
-	#define DEBUG_IF_PRINTLN(x, y)		if(x) Serial.println(y);
-	#define DEBUG_IIF_PRINT(x, y, z)	if(x) { Serial.print(y); } else { Serial.print(z); }
-	#define DEBUG_IIF_PRINTLN(x, y, z)	if(x) { Serial.println(y); } else { Serial.println(z); }
-	#define DEBUG_JSON(x)				serializeJsonPretty(x, Serial); Serial.println();
+	#define __DEBUG_SERIAL_INIT(x)		Serial.begin(x);
+	#define __DEBUG_PRINT(x)				Serial.print(x);
+	#define __DEBUG_PRINTLN(x)			Serial.println(x);
+	#define __DEBUG_IF_PRINT(x, y)		if(x) Serial.print(y);	
+	#define __DEBUG_IF_PRINTLN(x, y)		if(x) Serial.println(y);
+	#define __DEBUG_IIF_PRINT(x, y, z)	if(x) { Serial.print(y); } else { Serial.print(z); }
+	#define __DEBUG_IIF_PRINTLN(x, y, z)	if(x) { Serial.println(y); } else { Serial.println(z); }
+	#define __DEBUG_JSON(x)				serializeJsonPretty(x, Serial); Serial.println();
 #else 
-	#define DEBUG_SERIAL_INIT(x)
-	#define DEBUG_PRINT(x)
-	#define DEBUG_PRINTLN(x)
-	#define DEBUG_IF_PRINT(x, y)	
-	#define DEBUG_IF_PRINTLN(x, y)
-	#define DEBUG_IIF_PRINT(x, y, z)
-	#define DEBUG_IIF_PRINTLN(x, y, z)
-	#define DEBUG_JSON(x)
+	#define __DEBUG_SERIAL_INIT(x)
+	#define __DEBUG_PRINT(x)
+	#define __DEBUG_PRINTLN(x)
+	#define __DEBUG_IF_PRINT(x, y)	
+	#define __DEBUG_IF_PRINTLN(x, y)
+	#define __DEBUG_IIF_PRINT(x, y, z)
+	#define __DEBUG_IIF_PRINTLN(x, y, z)
+	#define __DEBUG_JSON(x)
 #endif
 
 #define WIFI_RETRY_DELAY 	500
@@ -81,8 +81,8 @@ bool RestService::beginWifi() {
 	int retries = 0;
 	bool connected = false;
 	
-	DEBUG_PRINTLN("")
-	DEBUG_PRINT("Connecting Wifi Access Point")
+	__DEBUG_PRINTLN("")
+	__DEBUG_PRINT("Connecting Wifi Access Point")
 	
 	WiFi.mode(WIFI_STA);
 	WiFi.begin(_wifi_ssid, _wifi_passwd);
@@ -91,15 +91,15 @@ bool RestService::beginWifi() {
 		retries++;		
 		delay(WIFI_RETRY_DELAY);
 		
-		DEBUG_PRINT(".");
+		__DEBUG_PRINT(".");
 	}
 	connected = WiFi.status() == WL_CONNECTED; 
 	
-	DEBUG_PRINTLN("")
-	DEBUG_IIF_PRINT(connected, "Connected to wifi ", "Unable to connect to wifi: ")
-	DEBUG_IF_PRINTLN(connected, _wifi_ssid)
-	DEBUG_IF_PRINT(connected, "Local IP Address: ")
-	DEBUG_IF_PRINTLN(connected, WiFi.localIP())
+	__DEBUG_PRINTLN("")
+	__DEBUG_IIF_PRINT(connected, "Connected to wifi ", "Unable to connect to wifi: ")
+	__DEBUG_IF_PRINTLN(connected, _wifi_ssid)
+	__DEBUG_IF_PRINT(connected, "Local IP Address: ")
+	__DEBUG_IF_PRINTLN(connected, WiFi.localIP())
 	
 	return connected;
 }
@@ -109,8 +109,8 @@ bool RestService::beginServer(TServerConfigureHandler, const char* welcome_messa
 	if(_webServer != nullptr)
 		return true;
 	
-	DEBUG_PRINTLN("")
-	DEBUG_PRINTLN("Initialize web server...")
+	__DEBUG_PRINTLN("")
+	__DEBUG_PRINTLN("Initialize web server...")
 	
 	_webServer = new ESP8266WebServer(_server_port);	
 	_webServer->on("/", HTTP_GET, [&]() {
@@ -142,7 +142,7 @@ void RestService::sendResponse(int code, const JsonDocument& document) {
 	size_t size = measureJson(document) + 2;
 	char buffer[size];
 	
-	DEBUG_JSON(document)
+	__DEBUG_JSON(document)
 	serializeJson(document, buffer, size - 1);
 
 	_webServer->send(code, "application/json", buffer);
